@@ -23,8 +23,8 @@ public class ResponseRoomDetails extends ResponseRoom {
         this.rating = rating;
     }
 
-    public ResponseRoomDetails(String address, String phone, int rating, int rid, int hotel_id, String name, String description, String price, boolean status, String hotelName, int adultAmount, int childAmount, String thumbnail) {
-        super(rid, hotel_id, name, description, price, status, hotelName, adultAmount, childAmount, thumbnail);
+    public ResponseRoomDetails(String address, String phone, int rating, int rid, int hotel_id, String name, String description, String price, boolean status, String hotelName, int adultAmount, int childAmount, String thumbnail, int amountRoom) {
+        super(rid, hotel_id, name, description, price, status, hotelName, adultAmount, childAmount, thumbnail, amountRoom);
         this.address = address;
         this.phone = phone;
         this.rating = rating;
@@ -56,11 +56,7 @@ public class ResponseRoomDetails extends ResponseRoom {
 
     @Override
     public String toString() {
-        return "ResponseRoomDetails{" + super.toString()
-                + ", address=" + address
-                + ", phone=" + phone
-                + ", rating=" + rating
-                + '}';
+        return "ResponseRoomDetails{" + "address=" + address + ", phone=" + phone + ", rating=" + rating + '}';
     }
-
+    
 }

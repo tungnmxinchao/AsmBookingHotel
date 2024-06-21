@@ -52,7 +52,7 @@ public class RoomDAO extends DBContext {
     }
 
     public List<ResponseRoom> findRoomByPage(int page, int statusInput) {
-        String sql = "select r.rid, r.hotel_id, r.[name], r.[description], r.price, r.[status], h.[name], r.adultAmount, r.childAmount, r.thumbnail from Room r\n"
+        String sql = "select r.rid, r.hotel_id, r.[name], r.[description], r.price, r.[status], h.[name], r.adultAmount, r.childAmount, r.thumbnail, r.amountRoom from Room r\n"
                 + "join Hotel h\n"
                 + "on r.hotel_id = h.id\n"
                 + "where r.[status] = ?\n"
@@ -78,10 +78,11 @@ public class RoomDAO extends DBContext {
                 int adultAmount = rs.getInt(8);
                 int childAmount = rs.getInt(9);
                 String thumbnail = rs.getString(10);
+                int amountRoom = rs.getInt(11);
 
                 ResponseRoom responseRoom = new ResponseRoom(id, hotel_id, name, description,
                         GetDataUtils.formatToVietnamCurrency(price), status, hotelName,
-                        adultAmount, childAmount, thumbnail);
+                        adultAmount, childAmount, thumbnail, amountRoom);
 
                 listRoom.add(responseRoom);
             }
@@ -98,7 +99,7 @@ public class RoomDAO extends DBContext {
 
     public ResponseRoom findRoomByID(int idInput) {
         String sql = "select r.rid, r.hotel_id, r.[name], r.[description], r.price, r.[status], r.adultAmount, \n"
-                + "r.childAmount, r.thumbnail,h.[name], h.[address], h.phone_number, h.rating from Room r\n"
+                + "r.childAmount, r.thumbnail,r.amountRoom, h.[name], h.[address], h.phone_number, h.rating  from Room r\n"
                 + "join Hotel h\n"
                 + "on r.hotel_id = h.id\n"
                 + "where r.[status] = 1 and r.rid = ?";
@@ -119,14 +120,16 @@ public class RoomDAO extends DBContext {
                 int adultAmount = rs.getInt(7);
                 int childAmount = rs.getInt(8);
                 String thumbnail = rs.getString(9);
-                String hotelName = rs.getString(10);
-                String address = rs.getString(11);
-                String phone = rs.getString(12);
-                int rating = rs.getInt(13);
+                int amountRoom = rs.getInt(10);
+                String hotelName = rs.getString(11);
+                String address = rs.getString(12);
+                String phone = rs.getString(13);
+                int rating = rs.getInt(14);
 
-                room = new ResponseRoomDetails(address, phone, rating, id, hotel_id, name,
-                        description, GetDataUtils.formatToVietnamCurrency(price), status,
-                        hotelName, adultAmount, childAmount, thumbnail);
+                room = new ResponseRoomDetails(address, phone, rating, id, hotel_id,
+                        name, description, GetDataUtils.formatToVietnamCurrency(price),
+                        status, hotelName, adultAmount,
+                        childAmount, thumbnail, amountRoom);
 
             }
 
@@ -140,9 +143,7 @@ public class RoomDAO extends DBContext {
 
     public static void main(String[] args) {
         RoomDAO r = new RoomDAO();
-
         ResponseRoom room = r.findRoomByID(1);
-
         System.out.println(room);
     }
 
@@ -174,5 +175,38 @@ public class RoomDAO extends DBContext {
             DBContext.closeResultSetAndStatement(rs, ps);
         }
         return imageRoom;
+    }
+
+    public boolean insertBookingRoom(int roomID, int idUser, String checkinDate,
+            String checkoutDate, int numberAdults, int numberChild, 
+            int numberRoom, int totalPice, String bookingDate) {
+        String sql = "INSERT INTO [dbo].[Booking]\n"
+                + "           ([room_id], [bookingBy], [check_in_date], [check_out_date], [booking_date], [quantity], [totalPrice], [status])\n"
+                + "     VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        try (Connection connection = new DBContext().connection) {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, roomID);
+            ps.setInt(2, idUser);
+            ps.setString(3, checkinDate);
+            ps.setString(4, checkoutDate);
+            ps.setString(5, bookingDate);
+            ps.setInt(6, numberRoom);
+            ps.setInt(7, totalPice);
+
+            //status : 1 đang chờ admin phê duyệt
+            ps.setInt(8, 1);
+            
+            int rowAffected = ps.executeUpdate();
+            
+            if(rowAffected > 0){
+                return true;
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            DBContext.closeResultSetAndStatement(rs, ps);
+        }
+        return false;
     }
 }

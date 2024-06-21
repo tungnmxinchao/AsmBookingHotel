@@ -16,6 +16,10 @@
         <servlet-name>RoomDetailsController</servlet-name>
         <servlet-class>controller.RoomDetailsController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>BookingRoomController</servlet-name>
+        <servlet-class>controller.BookingRoomController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginController</servlet-name>
         <url-pattern>/login</url-pattern>
@@ -31,5 +35,9 @@
     <servlet-mapping>
         <servlet-name>RoomDetailsController</servlet-name>
         <url-pattern>/roomDetails</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BookingRoomController</servlet-name>
+        <url-pattern>/bookingRoom</url-pattern>
     </servlet-mapping>
 </web-app>

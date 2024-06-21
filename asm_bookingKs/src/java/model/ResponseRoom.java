@@ -20,11 +20,12 @@ public class ResponseRoom {
     private int adultAmount;
     private int childAmount;
     private String thumbnail;
+    private int amountRoom;
 
     public ResponseRoom() {
     }
 
-    public ResponseRoom(int rid, int hotel_id, String name, String description, String price, boolean status, String hotelName, int adultAmount, int childAmount, String thumbnail) {
+    public ResponseRoom(int rid, int hotel_id, String name, String description, String price, boolean status, String hotelName, int adultAmount, int childAmount, String thumbnail, int amountRoom) {
         this.rid = rid;
         this.hotel_id = hotel_id;
         this.name = name;
@@ -35,6 +36,7 @@ public class ResponseRoom {
         this.adultAmount = adultAmount;
         this.childAmount = childAmount;
         this.thumbnail = thumbnail;
+        this.amountRoom = amountRoom;
     }
 
     public int getRid() {
@@ -117,12 +119,20 @@ public class ResponseRoom {
         this.thumbnail = thumbnail;
     }
 
+    public int getAmountRoom() {
+        return amountRoom;
+    }
+
+    public void setAmountRoom(int amountRoom) {
+        this.amountRoom = amountRoom;
+    }
+
     @Override
     public String toString() {
-        return "ResponseRoom{" + "rid=" + rid + ", hotel_id=" + hotel_id + ", name=" + name + ", description=" + description + ", price=" + price + ", status=" + status + ", hotelName=" + hotelName + ", adultAmount=" + adultAmount + ", childAmount=" + childAmount + ", thumbnail=" + thumbnail + '}';
+        return "ResponseRoom{" + "rid=" + rid + ", hotel_id=" + hotel_id + ", name=" + name + ", description=" + description + ", price=" + price + ", status=" + status + ", hotelName=" + hotelName + ", adultAmount=" + adultAmount + ", childAmount=" + childAmount + ", thumbnail=" + thumbnail + ", amountRoom=" + amountRoom + '}';
     }
 
     
-
+   
     
 }

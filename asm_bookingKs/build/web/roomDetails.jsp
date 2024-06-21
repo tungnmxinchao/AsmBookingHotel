@@ -262,30 +262,44 @@
                     <div class="col-lg-4">
                         <div class="room-booking">
                             <h3>Your Reservation</h3>
-                            <form action="#">
+                            <form action="bookingRoom" method="post">
                                 <div class="check-date">
                                     <label for="date-in">Check In:</label>
-                                    <input type="text" class="date-input" id="date-in">
-                                    <i class="icon_calendar"></i>
+                                    <input type="date" name="checkInDate" id="date-in">
+                                   
                                 </div>
                                 <div class="check-date">
                                     <label for="date-out">Check Out:</label>
-                                    <input type="text" class="date-input" id="date-out">
-                                    <i class="icon_calendar"></i>
+                                    <input type="date" name="checkOutDate" id="date-out">
+                                   
                                 </div>
                                 <div class="select-option">
-                                    <label for="guest">Guests:</label>
-                                    <select id="guest">
-                                        <option value="">3 Adults</option>
+                                    <label for="guest">Amount Adults:</label>
+                                    <select name="numberAdults">
+                                        <option value="1">1 Adults</option>
+                                        <option value="2">2 Adults</option>
+                                        <option value="3">3 Adults</option>
+                                    </select>
+                                </div>
+                                <div class="select-option">
+                                    <label for="guest">Amount Childrent:</label>
+                                    <select name="numberChild">
+                                        <option value="1">1 Childrent</option>
+                                        <option value="2">2 Childrent</option>
+                                        <option value="3">3 Childrent</option>
                                     </select>
                                 </div>
                                 <div class="select-option">
                                     <label for="room">Room:</label>
-                                    <select id="room">
-                                        <option value="">1 Room</option>
+                                    <select name="numberRoom">
+                                        <option value="1">1 Room</option>
+                                        <option value="2">2 Room</option>
+                                        <option value="6">3 Room</option>
                                     </select>
                                 </div>
-                                <button type="submit">Check Availability</button>
+                                <input style="display: none" type="text" name="roomID" value="${room.rid}" />
+                                <button type="submit">BOOKING NOW</button>
+                                <h3 style="color: red">${msg}</h3>
                             </form>
                         </div>
                     </div>
