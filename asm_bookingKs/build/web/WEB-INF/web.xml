@@ -24,6 +24,22 @@
         <servlet-name>TrackingBookedUserController</servlet-name>
         <servlet-class>controller.TrackingBookedUserController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ManageBookingController</servlet-name>
+        <servlet-class>controller.ManageBookingController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RoomWaitingConfirm</servlet-name>
+        <servlet-class>controller.RoomWaitingConfirm</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AccepRequestBookingController</servlet-name>
+        <servlet-class>controller.AccepRequestBookingController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RejectRequestBookingController</servlet-name>
+        <servlet-class>controller.RejectRequestBookingController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginController</servlet-name>
         <url-pattern>/login</url-pattern>
@@ -47,5 +63,21 @@
     <servlet-mapping>
         <servlet-name>TrackingBookedUserController</servlet-name>
         <url-pattern>/trackingBooked</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ManageBookingController</servlet-name>
+        <url-pattern>/manageBooking</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RoomWaitingConfirm</servlet-name>
+        <url-pattern>/roomWaitingConfirm</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AccepRequestBookingController</servlet-name>
+        <url-pattern>/accepBooking</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RejectRequestBookingController</servlet-name>
+        <url-pattern>/rejectBooking</url-pattern>
     </servlet-mapping>
 </web-app>

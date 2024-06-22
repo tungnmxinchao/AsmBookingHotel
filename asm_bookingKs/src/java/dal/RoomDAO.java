@@ -206,7 +206,7 @@ public class RoomDAO extends DBContext {
         return false;
     }
 
-    public List<ResponseTrackBookingUser> getListBookingUserByUserId(int idUser) {
+    public ResponseTrackBookingUser findBookingRoomByID(int idBookingInput) {
         String sql = "select b.id, b.room_id, r.[name] as room_name, u.id as idUser, u.username, \n"
                 + "b.check_in_date, b.check_out_date, b.booking_date, b.quantity, \n"
                 + "b.totalPrice, r.adultAmount, r.childAmount, b.[status] from Booking b\n"
@@ -214,14 +214,15 @@ public class RoomDAO extends DBContext {
                 + "on b.room_id = r.rid\n"
                 + "join Users u\n"
                 + "on b.bookingBy = u.id\n"
-                + "where b.bookingBy = ?";
+                + "where b.id = ?";
+        ResponseTrackBookingUser trackBooking = null;
         try (Connection connection = new DBContext().connection) {
             ps = connection.prepareStatement(sql);
-            ps.setInt(1, idUser);
+            ps.setInt(1, idBookingInput);
 
             rs = ps.executeQuery();
 
-            while (rs.next()) {
+            if (rs.next()) {
                 int idBooking = rs.getInt(1);
                 int roomID = rs.getInt(2);
                 String roomName = rs.getString(3);
@@ -236,12 +237,11 @@ public class RoomDAO extends DBContext {
                 int childAmount = rs.getInt(12);
                 int status = rs.getInt(13);
 
-                ResponseTrackBookingUser trackBooking = new ResponseTrackBookingUser(idBooking, roomID, roomName, userId,
+                trackBooking = new ResponseTrackBookingUser(idBooking, roomID, roomName, userId,
                         username, checkIntDate, checkOutDate, bookingDate, quantity,
                         GetDataUtils.formatToVietnamCurrency(totalPrice),
                         adultAmount, childAmount, status);
 
-                listTrackBookingUser.add(trackBooking);
             }
 
         } catch (SQLException e) {
@@ -249,16 +249,26 @@ public class RoomDAO extends DBContext {
         } finally {
             DBContext.closeResultSetAndStatement(rs, ps);
         }
-        return listTrackBookingUser;
+        return trackBooking;
     }
 
-    public int findTotalRecordTrackingBooked(int idUser) {
-        String sql = "select count(b.id) from Booking b\n"
-                + "where b.bookingBy = ?";
+    public int findTotalRecordTrackingBooked(int idUser, int adminMode, int status) {
+        String sql = "";
+        if (adminMode == 1) {
+            sql = "select count(b.id) from Booking b\n"
+                    + "where b.[status] = ?";
+        } else {
+            sql = "select count(b.id) from Booking b\n"
+                    + "where b.bookingBy = ?";
+        }
+
         try (Connection connection = new DBContext().connection) {
             ps = connection.prepareStatement(sql);
-            ps.setInt(1, idUser);
-
+            if (adminMode == 1) {
+                ps.setInt(1, status);
+            } else {
+                ps.setInt(1, idUser);
+            }
             rs = ps.executeQuery();
 
             if (rs.next()) {
@@ -272,21 +282,43 @@ public class RoomDAO extends DBContext {
         return -1;
     }
 
-    public List<ResponseTrackBookingUser> findTrackingBookedByPage(int page, int idUser) {
-        String sql = "select b.id, b.room_id, r.[name] as room_name, u.id as idUser, u.username, \n"
-                + "b.check_in_date, b.check_out_date, b.booking_date, b.quantity, \n"
-                + "b.totalPrice, r.adultAmount, r.childAmount, b.[status] from Booking b\n"
-                + "join Room r\n"
-                + "on b.room_id = r.rid\n"
-                + "join Users u\n"
-                + "on b.bookingBy = u.id\n"
-                + "where b.bookingBy = ?\n"
-                + "ORDER BY b.id desc\n"
-                + "OFFSET ? ROWS\n"
-                + "FETCH NEXT ? ROWS ONLY";
+    public List<ResponseTrackBookingUser> findTrackingBookedByPage(int page, int idUser, int adminMode, int statusInput) {
+        String sql = "";
+        if (adminMode == 1) {
+            sql = "select b.id, b.room_id, r.[name] as room_name, u.id as idUser, u.username, \n"
+                    + "b.check_in_date, b.check_out_date, b.booking_date, b.quantity, \n"
+                    + "b.totalPrice, r.adultAmount, r.childAmount, b.[status] from Booking b\n"
+                    + "join Room r\n"
+                    + "on b.room_id = r.rid\n"
+                    + "join Users u\n"
+                    + "on b.bookingBy = u.id\n"
+                    + "where b.[status] = ?\n"
+                    + "ORDER BY b.id desc\n"
+                    + "OFFSET ? ROWS\n"
+                    + "FETCH NEXT ? ROWS ONLY";
+        } else {
+            sql = "select b.id, b.room_id, r.[name] as room_name, u.id as idUser, u.username, \n"
+                    + "b.check_in_date, b.check_out_date, b.booking_date, b.quantity, \n"
+                    + "b.totalPrice, r.adultAmount, r.childAmount, b.[status] from Booking b\n"
+                    + "join Room r\n"
+                    + "on b.room_id = r.rid\n"
+                    + "join Users u\n"
+                    + "on b.bookingBy = u.id\n"
+                    + "where b.bookingBy = ?\n"
+                    + "ORDER BY b.id desc\n"
+                    + "OFFSET ? ROWS\n"
+                    + "FETCH NEXT ? ROWS ONLY";
+        }
+
         try (Connection connection = new DBContext().connection) {
             ps = connection.prepareStatement(sql);
-            ps.setInt(1, idUser);
+
+            if (adminMode == 1) {
+                ps.setInt(1, statusInput);
+            } else {
+                ps.setInt(1, idUser);
+            }
+
             ps.setInt(2, (page - 1) * RECORD_PER_PAGE);
             ps.setInt(3, RECORD_PER_PAGE);
 
@@ -321,6 +353,53 @@ public class RoomDAO extends DBContext {
             DBContext.closeResultSetAndStatement(rs, ps);
         }
         return listTrackBookingUser;
+    }
+
+    public boolean updateStatusBooking(int status, int idBooking) {
+        String sql = "UPDATE [dbo].[Booking]\n"
+                + "SET [status] = ?\n"
+                + "WHERE [id] = ?";
+        try (Connection connection = new DBContext().connection) {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, status);
+            ps.setInt(2, idBooking);
+
+            int rowAffected = ps.executeUpdate();
+
+            if (rowAffected > 0) {
+                return true;
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            DBContext.closeResultSetAndStatement(rs, ps);
+        }
+        return false;
+
+    }
+
+    public boolean updateAmountRoom(int roomID, int amountRoomUpdate) {
+        String sql = "UPDATE [dbo].[Room]\n"
+                + "SET [amountRoom] = ?\n"
+                + "WHERE [rid] = ?";
+        try (Connection connection = new DBContext().connection) {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, amountRoomUpdate);
+            ps.setInt(2, roomID);
+
+            int rowAffected = ps.executeUpdate();
+
+            if (rowAffected > 0) {
+                return true;
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            DBContext.closeResultSetAndStatement(rs, ps);
+        }
+        return false;
     }
 
 }

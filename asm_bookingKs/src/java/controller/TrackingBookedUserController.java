@@ -79,8 +79,9 @@ public class TrackingBookedUserController extends HttpServlet {
             case "category":
                 break;
             default:
-                totalRecord = roomDAO.findTotalRecordTrackingBooked(idUser);
-                listTrackingBooked = roomDAO.findTrackingBookedByPage(page, idUser);
+                int adminMode = 0;
+                totalRecord = roomDAO.findTotalRecordTrackingBooked(idUser , adminMode, 0);
+                listTrackingBooked = roomDAO.findTrackingBookedByPage(page, idUser , adminMode, 0);
 
                 pageControl.setUrlPattern("trackingBooked?");
 

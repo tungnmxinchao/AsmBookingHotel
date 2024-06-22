@@ -31,9 +31,16 @@
                                 <img src="img/flag.jpg" alt="">
                                 <span>${sessionScope.user.username} <i class="fa fa-angle-down"></i></span>
                                 <div class="flag-dropdown">
-                                    <ul>
-                                        <li><a href="trackingBooked">Tracking Room</a></li>
-                                    </ul>
+                                    <c:if test="${sessionScope.user.role == 0}">
+                                        <ul>
+                                            <li><a href="trackingBooked">Tracking Room</a></li>
+                                        </ul>
+                                    </c:if>
+                                    <c:if test="${sessionScope.user.role == 1}">
+                                        <ul>
+                                            <li><a href="manageBooking">Manage Rooms Booked</a></li>
+                                        </ul>
+                                    </c:if>
                                 </div>
                             </div>
                         </c:if>
