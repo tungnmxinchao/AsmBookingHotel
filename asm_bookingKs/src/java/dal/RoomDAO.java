@@ -402,4 +402,27 @@ public class RoomDAO extends DBContext {
         return false;
     }
 
+    public boolean updateStatusRoom(int status, int idRoom) {
+        String sql = "UPDATE [dbo].[Room]\n"
+                + "   SET [status] = ?\n"
+                + " WHERE [rid] = ?";
+        try (Connection connection = new DBContext().connection) {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, status);
+            ps.setInt(2, idRoom);
+
+            int rowAffected = ps.executeUpdate();
+
+            if (rowAffected > 0) {
+                return true;
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            DBContext.closeResultSetAndStatement(rs, ps);
+        }
+        return false;
+    }
+
 }

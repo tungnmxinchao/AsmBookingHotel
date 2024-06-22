@@ -265,12 +265,12 @@
                             <form action="bookingRoom" method="post">
                                 <div class="check-date">
                                     <label for="date-in">Check In:</label>
-                                    <input type="date" name="checkInDate" id="date-in">
+                                    <input type="date" name="checkInDate" id="date-in" required="">
                                    
                                 </div>
                                 <div class="check-date">
                                     <label for="date-out">Check Out:</label>
-                                    <input type="date" name="checkOutDate" id="date-out">
+                                    <input type="date" name="checkOutDate" id="date-out" required="">
                                    
                                 </div>
                                 <div class="select-option">

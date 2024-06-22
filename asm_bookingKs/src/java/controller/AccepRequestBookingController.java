@@ -17,50 +17,51 @@ import jakarta.servlet.http.HttpServletResponse;
  * @author TNO
  */
 public class AccepRequestBookingController extends HttpServlet {
-
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
         int roomID = Integer.parseInt(request.getParameter("roomID"));
         int quantityBooking = Integer.parseInt(request.getParameter("quantityBooking"));
-
+        
         RoomDAO roomDAO = new RoomDAO();
         String msg = "";
 
         // amount room in table room
         int amountRoom = roomDAO.findRoomByID(roomID).getAmountRoom();
-
+        
         int statusBooking = roomDAO.findBookingRoomByID(id).getStatus();
-
+        
         if (statusBooking != 2) {
             //status = 2 : accept
             if (roomDAO.updateStatusBooking(2, id)) {
                 int amountRoomUpdate = amountRoom - quantityBooking;
                 if (roomDAO.updateAmountRoom(roomID, amountRoomUpdate)) {
-                    msg = "Update status succesfully with booking id = " + id;
+                    response.sendRedirect("roomWaitingConfirm");
+                    return;
                 } else {
                     msg = "Update amount failed!";
                 }
-
+                
             } else {
                 msg = "Update status failed!";
             }
-
+            
             request.setAttribute("msg", msg);
             request.getRequestDispatcher("roomWaitingConfirm").forward(request, response);
-        }else{
+        } else {
             response.sendRedirect("roomWaitingConfirm");
         }
-
+        
     }
-
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        
     }
-
+    
     @Override
     public String getServletInfo() {
         return "Short description";

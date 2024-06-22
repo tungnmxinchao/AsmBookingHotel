@@ -137,8 +137,8 @@
                             </a>
                         </li>
                         <li>
-                            <a href="tables/datatables.html">
-                                <span class="sub-item">Datatables</span>
+                            <a href="manageRoom">
+                                <span class="sub-item">Manage Room</span>
                             </a>
                         </li>
                     </ul>

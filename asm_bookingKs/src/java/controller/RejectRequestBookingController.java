@@ -26,11 +26,11 @@ public class RejectRequestBookingController extends HttpServlet {
 
         //status = 2 : accept
         if (roomDAO.updateStatusBooking(0, id)) {
-            msg = "Update status succesfully with booking id = " + id;
+           response.sendRedirect("roomWaitingConfirm");
+           return;
         } else {
             msg = "Update status failed!";
         }
-
         request.setAttribute("msg", msg);
         request.getRequestDispatcher("roomWaitingConfirm").forward(request, response);
     }
