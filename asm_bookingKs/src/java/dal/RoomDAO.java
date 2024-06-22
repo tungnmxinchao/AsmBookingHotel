@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import model.ResponseRoom;
 import model.ResponseRoomDetails;
-import model.Room;
+import model.ResponseTrackBookingUser;
 import model.RoomImage;
 import utils.GetDataUtils;
 
@@ -24,10 +24,12 @@ public class RoomDAO extends DBContext {
     private ResultSet rs;
     private List<ResponseRoom> listRoom;
     private List<RoomImage> imageRoom;
+    private List<ResponseTrackBookingUser> listTrackBookingUser;
 
     public RoomDAO() {
         listRoom = new ArrayList<>();
         imageRoom = new ArrayList<>();
+        listTrackBookingUser = new ArrayList<>();
     }
 
     public int findTotalRecord(int statusInput) {
@@ -141,12 +143,6 @@ public class RoomDAO extends DBContext {
         return room;
     }
 
-    public static void main(String[] args) {
-        RoomDAO r = new RoomDAO();
-        ResponseRoom room = r.findRoomByID(1);
-        System.out.println(room);
-    }
-
     public List<RoomImage> findImageRoomByID(int idInput) {
         String sql = "select * from RoomImage ri\n"
                 + "where ri.room_id = ?";
@@ -178,7 +174,7 @@ public class RoomDAO extends DBContext {
     }
 
     public boolean insertBookingRoom(int roomID, int idUser, String checkinDate,
-            String checkoutDate, int numberAdults, int numberChild, 
+            String checkoutDate, int numberAdults, int numberChild,
             int numberRoom, int totalPice, String bookingDate) {
         String sql = "INSERT INTO [dbo].[Booking]\n"
                 + "           ([room_id], [bookingBy], [check_in_date], [check_out_date], [booking_date], [quantity], [totalPrice], [status])\n"
@@ -195,10 +191,10 @@ public class RoomDAO extends DBContext {
 
             //status : 1 đang chờ admin phê duyệt
             ps.setInt(8, 1);
-            
+
             int rowAffected = ps.executeUpdate();
-            
-            if(rowAffected > 0){
+
+            if (rowAffected > 0) {
                 return true;
             }
 
@@ -209,4 +205,122 @@ public class RoomDAO extends DBContext {
         }
         return false;
     }
+
+    public List<ResponseTrackBookingUser> getListBookingUserByUserId(int idUser) {
+        String sql = "select b.id, b.room_id, r.[name] as room_name, u.id as idUser, u.username, \n"
+                + "b.check_in_date, b.check_out_date, b.booking_date, b.quantity, \n"
+                + "b.totalPrice, r.adultAmount, r.childAmount, b.[status] from Booking b\n"
+                + "join Room r\n"
+                + "on b.room_id = r.rid\n"
+                + "join Users u\n"
+                + "on b.bookingBy = u.id\n"
+                + "where b.bookingBy = ?";
+        try (Connection connection = new DBContext().connection) {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, idUser);
+
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int idBooking = rs.getInt(1);
+                int roomID = rs.getInt(2);
+                String roomName = rs.getString(3);
+                int userId = rs.getInt(4);
+                String username = rs.getString(5);
+                Date checkIntDate = rs.getDate(6);
+                Date checkOutDate = rs.getDate(7);
+                Date bookingDate = rs.getDate(8);
+                int quantity = rs.getInt(9);
+                int totalPrice = rs.getInt(10);
+                int adultAmount = rs.getInt(11);
+                int childAmount = rs.getInt(12);
+                int status = rs.getInt(13);
+
+                ResponseTrackBookingUser trackBooking = new ResponseTrackBookingUser(idBooking, roomID, roomName, userId,
+                        username, checkIntDate, checkOutDate, bookingDate, quantity,
+                        GetDataUtils.formatToVietnamCurrency(totalPrice),
+                        adultAmount, childAmount, status);
+
+                listTrackBookingUser.add(trackBooking);
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            DBContext.closeResultSetAndStatement(rs, ps);
+        }
+        return listTrackBookingUser;
+    }
+
+    public int findTotalRecordTrackingBooked(int idUser) {
+        String sql = "select count(b.id) from Booking b\n"
+                + "where b.bookingBy = ?";
+        try (Connection connection = new DBContext().connection) {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, idUser);
+
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            DBContext.closeResultSetAndStatement(rs, ps);
+        }
+        return -1;
+    }
+
+    public List<ResponseTrackBookingUser> findTrackingBookedByPage(int page, int idUser) {
+        String sql = "select b.id, b.room_id, r.[name] as room_name, u.id as idUser, u.username, \n"
+                + "b.check_in_date, b.check_out_date, b.booking_date, b.quantity, \n"
+                + "b.totalPrice, r.adultAmount, r.childAmount, b.[status] from Booking b\n"
+                + "join Room r\n"
+                + "on b.room_id = r.rid\n"
+                + "join Users u\n"
+                + "on b.bookingBy = u.id\n"
+                + "where b.bookingBy = ?\n"
+                + "ORDER BY b.id desc\n"
+                + "OFFSET ? ROWS\n"
+                + "FETCH NEXT ? ROWS ONLY";
+        try (Connection connection = new DBContext().connection) {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, idUser);
+            ps.setInt(2, (page - 1) * RECORD_PER_PAGE);
+            ps.setInt(3, RECORD_PER_PAGE);
+
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int idBooking = rs.getInt(1);
+                int roomID = rs.getInt(2);
+                String roomName = rs.getString(3);
+                int userId = rs.getInt(4);
+                String username = rs.getString(5);
+                Date checkIntDate = rs.getDate(6);
+                Date checkOutDate = rs.getDate(7);
+                Date bookingDate = rs.getDate(8);
+                int quantity = rs.getInt(9);
+                int totalPrice = rs.getInt(10);
+                int adultAmount = rs.getInt(11);
+                int childAmount = rs.getInt(12);
+                int status = rs.getInt(13);
+
+                ResponseTrackBookingUser trackBooking = new ResponseTrackBookingUser(idBooking, roomID, roomName, userId,
+                        username, checkIntDate, checkOutDate, bookingDate, quantity,
+                        GetDataUtils.formatToVietnamCurrency(totalPrice),
+                        adultAmount, childAmount, status);
+
+                listTrackBookingUser.add(trackBooking);
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            DBContext.closeResultSetAndStatement(rs, ps);
+        }
+        return listTrackBookingUser;
+    }
+
 }

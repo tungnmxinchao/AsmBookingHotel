@@ -294,7 +294,7 @@
                                     <select name="numberRoom">
                                         <option value="1">1 Room</option>
                                         <option value="2">2 Room</option>
-                                        <option value="6">3 Room</option>
+                                        <option value="3">3 Room</option>
                                     </select>
                                 </div>
                                 <input style="display: none" type="text" name="roomID" value="${room.rid}" />

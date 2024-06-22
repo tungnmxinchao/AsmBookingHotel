@@ -26,16 +26,17 @@
                         <c:if test="${sessionScope.user == null}">
                             <a href="login" class="bk-btn">Login</a>
                         </c:if>
-                        <div class="language-option">
-                            <img src="img/flag.jpg" alt="">
-                            <span>EN <i class="fa fa-angle-down"></i></span>
-                            <div class="flag-dropdown">
-                                <ul>
-                                    <li><a href="#">Zi</a></li>
-                                    <li><a href="#">Fr</a></li>
-                                </ul>
+                        <c:if test="${sessionScope.user != null}">
+                            <div class="language-option">
+                                <img src="img/flag.jpg" alt="">
+                                <span>${sessionScope.user.username} <i class="fa fa-angle-down"></i></span>
+                                <div class="flag-dropdown">
+                                    <ul>
+                                        <li><a href="trackingBooked">Tracking Room</a></li>
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
+                        </c:if>
                     </div>
                 </div>
             </div>
