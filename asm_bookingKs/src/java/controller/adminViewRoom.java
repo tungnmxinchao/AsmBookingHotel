@@ -20,6 +20,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import model.Hotel;
+import model.ResponseRoom;
+import model.RoomImage;
 import model.Users;
 import org.apache.commons.io.FilenameUtils;
 
@@ -30,9 +32,7 @@ import org.apache.commons.io.FilenameUtils;
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
         maxFileSize = 1024 * 1024 * 10, // 10MB
         maxRequestSize = 1024 * 1024 * 50)   // 50MB
-public class addRooms extends HttpServlet {
-
-    private static final long serialVersionUID = 1L;
+public class adminViewRoom extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -41,15 +41,21 @@ public class addRooms extends HttpServlet {
         Users user = (Users) session.getAttribute("user");
 
         if (user != null && user.getRole() == 1) {
+            int idRoom = Integer.parseInt(request.getParameter("id"));
             RoomDAO roomDAO = new RoomDAO();
+            ResponseRoom room = roomDAO.findRoomByID(idRoom);
             List<Hotel> listHotel = roomDAO.findAllHotel();
+            List<RoomImage> imageRoom = roomDAO.findImageRoomByID(idRoom);
+            int idHotel = room.getHotel_id();
 
+            request.setAttribute("idHotel", idHotel);
+            request.setAttribute("imageRoom", imageRoom);
+            request.setAttribute("room", room);
             request.setAttribute("listHotel", listHotel);
-            request.getRequestDispatcher("addRoom.jsp").forward(request, response);
+            request.getRequestDispatcher("adminViewRoom.jsp").forward(request, response);
         } else {
             response.sendRedirect("login");
         }
-
     }
 
     @Override
@@ -64,6 +70,7 @@ public class addRooms extends HttpServlet {
         int adultAmount = Integer.parseInt(request.getParameter("adultAmount"));
         int childAmount = Integer.parseInt(request.getParameter("childAmount"));
         int amountRoom = Integer.parseInt(request.getParameter("amountRoom"));
+        int roomID = Integer.parseInt(request.getParameter("idRoom"));
 
         String uploadPath = getServletContext().getRealPath("") + "../../web/img";
         File uploadDir = new File(uploadPath);
@@ -104,7 +111,7 @@ public class addRooms extends HttpServlet {
                     listRoomImage.add(imageRooms);
                 } catch (IOException e) {
                     // Xử lý ngoại lệ khi ghi file
-                    System.out.println(e.getMessage());
+                    e.printStackTrace();
                     // Có thể thêm logic để thông báo lỗi hoặc thực hiện hành động khác
                 }
             }
@@ -113,22 +120,59 @@ public class addRooms extends HttpServlet {
         String thumbnailRoom = "img/" + thumbnailFileName;
         RoomDAO roomDAO = new RoomDAO();
         String msg = "";
-        if (roomDAO.insertRoom(idHotel, name, description, price, status, adultAmount,
-                childAmount, amountRoom, thumbnailRoom, listRoomImage)) {
-            msg = "Add sucesfully!";
+        int updateMode = 0;
+        List<RoomImage> listImage = roomDAO.findImageRoomByID(roomID);
+        int totalImageOfRoomID = roomDAO.numberImageOfRoomID(roomID);
+
+        if (thumbnailFileName.isEmpty() && listRoomImage.isEmpty()) {
+            updateMode = 1;
+            if (roomDAO.updateRoom(idHotel, name, description, price, status, adultAmount,
+                    childAmount, amountRoom, thumbnailRoom, updateMode, roomID)) {
+                response.sendRedirect("adminViewRoom?id=" + roomID);
+                return;
+            } else {
+                response.sendRedirect("adminViewRoom?id=" + roomID);
+                return;
+            }
+
+        } else if (!thumbnailFileName.isEmpty() && listRoomImage.isEmpty()) {
+            updateMode = 2;
+            if (roomDAO.updateRoom(idHotel, name, description, price, status, adultAmount,
+                    childAmount, amountRoom, thumbnailRoom, updateMode, roomID)) {
+                response.sendRedirect("adminViewRoom?id=" + roomID);
+                return;
+            } else {
+                response.sendRedirect("adminViewRoom?id=" + roomID);
+                return;
+            }
+
         } else {
-            msg = "Add failed!";
+            updateMode = 1;
+            if (roomDAO.updateRoom(idHotel, name, description, price, status, adultAmount,
+                    childAmount, amountRoom, thumbnailRoom, updateMode, roomID)) {
+                for (int i = 0; i < totalImageOfRoomID; i++) {
+                    int idRoomImage = listImage.get(i).getId();
+                    String roomImage = listRoomImage.get(i);
+                    if (roomDAO.updateImageByID(idRoomImage, roomImage, roomID)) {
+                        msg = "Update sucsesfully!";
+                    } else {
+                        msg = "Update failed";
+                    }
+                }
+                response.sendRedirect("adminViewRoom?id=" + roomID);
+                return;
+            } else {
+                response.sendRedirect("adminViewRoom?id=" + roomID);
+                return;
+            }
+
         }
-
-        request.setAttribute("msg", msg);
-        request.getRequestDispatcher("addRoom.jsp").forward(request, response);
-
     }
 
     @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
+    }
 
     private String getSubmittedFileName(Part part) {
         String contentDisposition = part.getHeader("content-disposition");

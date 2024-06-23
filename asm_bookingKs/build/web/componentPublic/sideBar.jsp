@@ -137,6 +137,16 @@
                             </a>
                         </li>
                         <li>
+                            <a href="roomConfirm">
+                                <span class="sub-item">Rooms confirmation</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="bookedHistory">
+                                <span class="sub-item">Paid booked history</span>
+                            </a>
+                        </li>
+                        <li>
                             <a href="manageRoom">
                                 <span class="sub-item">Manage Room</span>
                             </a>

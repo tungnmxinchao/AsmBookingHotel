@@ -262,7 +262,7 @@
                                                     <td>${listRoom.hotelName}</td>
                                                     <td>${listRoom.status == true ? "Active" : "Blocked"}</td>
                                                     <td>
-                                                        <a href="viewDetailsURL" class="btn btn-info" title="View Details">
+                                                        <a href="adminViewRoom?id=${listRoom.rid}" class="btn btn-info" title="View Details">
                                                             <i class="fas fa-eye"></i> <!-- Icon for viewing details -->
                                                         </a>
                                                         <a href="deleteRoom?id=${listRoom.rid}" class="btn btn-danger" title="Delete">

@@ -176,6 +176,27 @@ public class RoomDAO extends DBContext {
         return imageRoom;
     }
 
+    public int numberImageOfRoomID(int idRoom) {
+        String sql = "select count(ri.id) from RoomImage ri\n"
+                + "where ri.room_id = ?";
+        try (Connection connection = new DBContext().connection) {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, idRoom);
+
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            DBContext.closeResultSetAndStatement(rs, ps);
+        }
+        return -1;
+    }
+
     public boolean insertBookingRoom(int roomID, int idUser, String checkinDate,
             String checkoutDate, int numberAdults, int numberChild,
             int numberRoom, int totalPice, String bookingDate) {
@@ -476,7 +497,7 @@ public class RoomDAO extends DBContext {
                 + "           ,[room_id])\n"
                 + "     VALUES\n"
                 + "           (?, ?);";
-        
+
         String msg = "";
 
         try (Connection connection = new DBContext().connection) {
@@ -500,20 +521,123 @@ public class RoomDAO extends DBContext {
                         ps = connection.prepareStatement(sqlInsertRoomImage);
                         ps.setString(1, imageRooms.get(i));
                         ps.setInt(2, roomID);
-                        
+
                         int rowImagessAfected = ps.executeUpdate();
-                        if (rowImagessAfected > 0){
+                        if (rowImagessAfected > 0) {
                             msg = "add order details successfully";
-                        }else {
+                        } else {
                             msg = "add order details failed";
                         }
                     }
 
                 }
-            }       
-            if(rowAffected > 0 ){
+            }
+            if (rowAffected > 0) {
                 return true;
             }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            DBContext.closeResultSetAndStatement(rs, ps);
+        }
+        return false;
+    }
+
+    public boolean updateRoom(int idHotel, String name, String description, int price,
+            int status, int adultAmount, int childAmount, int amountRoom, String thumbnailRoom,
+            int updateMode, int roomID) {
+
+        String sql = "";
+
+        switch (updateMode) {
+            case 1:
+                sql = "UPDATE [dbo].[Room]\n"
+                        + "   SET [hotel_id] = ?\n"
+                        + "      ,[name] = ?\n"
+                        + "      ,[description] = ?\n"
+                        + "      ,[price] = ?\n"
+                        + "      ,[status] = ?\n"
+                        + "      ,[adultAmount] = ?\n"
+                        + "      ,[childAmount] = ?\n"
+                        + "      ,[amountRoom] = ?\n"
+                        + " WHERE rid = ?";
+                break;
+            case 2:
+                sql = "UPDATE [dbo].[Room]\n"
+                        + "   SET [hotel_id] = ?\n"
+                        + "      ,[name] = ?\n"
+                        + "      ,[description] = ?\n"
+                        + "      ,[price] = ?\n"
+                        + "      ,[status] = ?\n"
+                        + "      ,[adultAmount] = ?\n"
+                        + "      ,[childAmount] = ?\n"
+                        + "      ,[thumbnail] = ?\n"
+                        + "      ,[amountRoom] = ?\n"
+                        + " WHERE rid = ?";
+                break;
+            default:
+                throw new AssertionError();
+        }
+
+        try (Connection connection = new DBContext().connection) {
+            ps = connection.prepareStatement(sql);
+
+            ps.setInt(1, idHotel);
+            ps.setString(2, name);
+            ps.setString(3, description);
+            ps.setInt(4, price);
+            ps.setInt(5, status);
+            ps.setInt(6, adultAmount);
+            ps.setInt(7, childAmount);
+
+            switch (updateMode) {
+                case 1:
+                    ps.setInt(8, amountRoom);
+                    ps.setInt(9, roomID);
+                    break;
+                case 2:
+                    ps.setString(8, thumbnailRoom);
+                    ps.setInt(9, amountRoom);
+                    ps.setInt(10, roomID);
+                    break;
+                default:
+                    throw new AssertionError();
+            }
+
+            int rowAffected = ps.executeUpdate();
+
+            if (rowAffected > 0) {
+                return true;
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            DBContext.closeResultSetAndStatement(rs, ps);
+        }
+        return false;
+
+    }
+
+    public boolean updateImageByID(int idRoomImage, String imageRoom, int roomID) {
+        String sql = "UPDATE [dbo].[RoomImage]\n"
+                + "   SET [image] = ?\n"
+                + "      ,[room_id] = ?\n"
+                + " WHERE [id] = ?";
+        try (Connection connection = new DBContext().connection) {
+            ps = connection.prepareStatement(sql);
+            
+            ps.setString(1, imageRoom);
+            ps.setInt(2, roomID);
+            ps.setInt(3, idRoomImage);
+            
+            int rowAffected = ps.executeUpdate();
+            
+            if(rowAffected > 0){
+                return true;
+            }
+            
+            
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {

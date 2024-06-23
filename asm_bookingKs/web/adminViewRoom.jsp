@@ -4,6 +4,7 @@
     Author     : TNO
 --%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -169,37 +170,37 @@
                         <h4 class="page-title">View Informations Room</h4>
                     </div>
                     <div class="page-category">
-                        <form action="addRoomURL" method="POST" enctype="multipart/form-data">
+                        <form action="adminViewRoom" method="POST" enctype="multipart/form-data">
                             <div class="form-group">
                                 <label for="hotel">Hotel</label>
                                 <select class="form-control" id="hotel" name="hotel">
-                                    <option value="hotel1">Hotel 1</option>
-                                    <option value="hotel2">Hotel 2</option>
-                                    <option value="hotel3">Hotel 3</option>
+                                    <c:forEach items="${listHotel}" var="listHotel">
+                                        <option value="${listHotel.id == idHotel ? 'selected' : ""} >${listHotel.name}</option>
+                                    </c:forEach>
                                     <!-- Add more hotels as needed -->
                                 </select>
                             </div>
 
                             <div class="form-group">
                                 <label for="name">Room Name</label>
-                                <input type="text" class="form-control" id="name" name="name" required>
+                                <input type="text" class="form-control" id="name" value="${room.name}" name="name" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="description">Room Description</label>
-                                <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+                                <textarea class="form-control" id="description" name="description" rows="4" required>${room.description}</textarea>
                             </div>
 
                             <div class="form-group">
                                 <label for="price">Price</label>
-                                <input type="number" class="form-control" id="price" name="price" required>
+                                <input type="text" class="form-control" value="${room.price}" id="price" name="price" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="status">Status</label>
                                 <select class="form-control" id="status" name="status">
-                                    <option value="active">Active</option>
-                                    <option value="blocked">Blocked</option>
+                                    <option ${room.status ==  true ? 'selected' : ""} value="1">Active</option>
+                                    <option ${room.status ==  false ? 'selected' : ""} value="0">Blocked</option>
                                 </select>
                             </div>
 
@@ -207,7 +208,7 @@
                                 <label>Adult Amount</label>
                                 <div class="input-group">
                                     <div class="btn-decrement">-</div>
-                                    <input type="number" class="form-control" name="adultAmount" value="1" min="1" required>
+                                    <input type="number" class="form-control" value="${room.adultAmount}" name="adultAmount" value="1" min="1" required>
                                     <div class="btn-increment">+</div>
                                 </div>
                             </div>
@@ -216,28 +217,35 @@
                                 <label>Child Amount</label>
                                 <div class="input-group">
                                     <div class="btn-decrement">-</div>
-                                    <input type="number" class="form-control" name="childAmount" value="0" min="0" required>
+                                    <input type="number" class="form-control" value="${room.childAmount}" name="childAmount" value="0" min="0" required>
                                     <div class="btn-increment">+</div>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label for="thumbnail">Thumbnail</label>
-                                <input type="file" class="form-control" id="thumbnail" name="thumbnail" required>
-                                <div class="thumbnail-preview" id="thumbnailPreview"></div>
+                                <input type="file" class="form-control" id="thumbnail" name="thumbnail">
+                                <div class="thumbnail-preview" id="thumbnailPreview">
+                                    <img class="image-preview" src="${room.thumbnail}" alt="alt"/>
+                                </div>
                             </div>
 
                             <div class="form-group">
                                 <label for="amountRoom">Amount of Rooms</label>
-                                <input type="number" class="form-control" id="amountRoom" name="amountRoom" min="1" required>
+                                <input type="number" class="form-control" value="${room.amountRoom}" id="amountRoom" name="amountRoom" min="1">
                             </div>
 
                             <div class="form-group">
                                 <label for="roomImages">Room Images</label>
-                                <input type="file" class="form-control" id="roomImages" name="roomImages[]" multiple>
-                                <div class="room-images-preview" id="roomImagesPreview"></div>
-                            </div>
+                                <input type="file" class="form-control" id="roomImages" name="roomImages" multiple>
+                                <div class="room-images-preview" id="roomImagesPreview">
+                                    <c:forEach items="${imageRoom}" var="imageRoom">
+                                        <img class="image-preview" src="${imageRoom.image}" alt="alt"/>
+                                    </c:forEach>
 
+                                </div>
+                            </div>
+                            <input style="display: none" type="text" name="idRoom" value="${room.rid}" />
                             <button type="submit" class="submit-btn">Update Room</button>
                         </form>
                     </div>

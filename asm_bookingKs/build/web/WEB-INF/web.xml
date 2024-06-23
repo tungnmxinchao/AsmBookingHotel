@@ -52,6 +52,22 @@
         <servlet-name>AddRooms</servlet-name>
         <servlet-class>controller.addRooms</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>adminViewRoom</servlet-name>
+        <servlet-class>controller.adminViewRoom</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>roomConfirm</servlet-name>
+        <servlet-class>controller.roomConfirm</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>paidBooking</servlet-name>
+        <servlet-class>controller.paidBooking</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>bookedHistory</servlet-name>
+        <servlet-class>controller.bookedHistory</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginController</servlet-name>
         <url-pattern>/login</url-pattern>
@@ -103,5 +119,21 @@
     <servlet-mapping>
         <servlet-name>AddRooms</servlet-name>
         <url-pattern>/addRooms</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>adminViewRoom</servlet-name>
+        <url-pattern>/adminViewRoom</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>roomConfirm</servlet-name>
+        <url-pattern>/roomConfirm</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>paidBooking</servlet-name>
+        <url-pattern>/paidBooking</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>bookedHistory</servlet-name>
+        <url-pattern>/bookedHistory</url-pattern>
     </servlet-mapping>
 </web-app>

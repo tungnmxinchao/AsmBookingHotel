@@ -77,6 +77,29 @@
                 color: #009879;
             }
 
+            .accept-link,
+            .reject-link {
+                display: inline-block;
+                padding: 5px 10px;
+                color: white;
+                text-decoration: none;
+                border-radius: 3px;
+                margin-right: 5px;
+            }
+
+            .accept-link {
+                background-color: green;
+            }
+
+            .reject-link {
+                background-color: red;
+            }
+
+            .accept-link i,
+            .reject-link i {
+                margin-right: 5px;
+            }
+
             /* Additional Styling for Better Layout */
             .page-header {
                 display: flex;
@@ -123,24 +146,6 @@
 
             .page-category h4 {
                 margin-bottom: 20px;
-            }
-            .btn-add-room {
-                margin-bottom: 10px;
-                background-color: #28a745;
-                color: white;
-                padding: 10px 20px;
-                border: none;
-                border-radius: 5px;
-                text-decoration: none;
-                display: inline-flex;
-                align-items: center;
-            }
-            .btn-add-room i {
-                margin-right: 5px;
-            }
-            .btn-add-room:hover {
-                background-color: #218838;
-                color: white;
             }
         </style>
     </head>
@@ -226,49 +231,44 @@
                             <div class="page-category">
                                 <div class="row">
                                     <h4 style="color: red">${msg}</h4>
-                                    <div>
-                                        <a href="addRooms" class="btn btn-success" title="Add Room" style="margin-bottom: 10px;">
-                                            <i class="fas fa-plus"></i> Add Room
-                                        </a>
-                                    </div>
                                     <table class="styled-table" border="1">
                                         <thead>
                                             <tr>
-                                                <th>Thumbnail</th>
-                                                <th>Room ID</th>
+                                                <th>Booking ID</th>
                                                 <th>Room Name</th>
-                                                <th>Price</th>
+                                                 <th>Booking By</th>
+                                                <th>Check In Date</th>
+                                                <th>Check Out Date</th>
+                                                <th>Booking Date</th>
+                                                <th>Quantity</th>
                                                 <th>Adult Amount</th>
-                                                <th>Childrent Amount</th>
-                                                <th>Amount Room</th>
-                                                <th>Hotel Name</th>
+                                                <th>Childent Amount</th>
+                                                <th>Total Price</th>
                                                 <th>Status</th>
-                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <c:forEach items="${listRoom}" var="listRoom">
+                                            <c:forEach items="${trackBooking}" var="trackBooking">
                                                 <tr>
-                                                    <td>
-                                                        <img  height="80px" src="${listRoom.thumbnail}" class="responsive-img" alt="alt"/>
-
-                                                    </td>
-                                                    <td>${listRoom.rid}</td>
-                                                    <td>${listRoom.name}</td>
-                                                    <td>${listRoom.price}</td>
-                                                    <td>${listRoom.adultAmount}</td>
-                                                    <td>${listRoom.childAmount}</td>
-                                                    <td>${listRoom.amountRoom}</td>
-                                                    <td>${listRoom.hotelName}</td>
-                                                    <td>${listRoom.status == true ? "Active" : "Blocked"}</td>
-                                                    <td>
-                                                        <a href="adminViewRoom?id=${listRoom.rid}" class="btn btn-info" title="View Details">
-                                                            <i class="fas fa-eye"></i> <!-- Icon for viewing details -->
-                                                        </a>
-                                                        <a href="deleteRoom?id=${listRoom.rid}" class="btn btn-danger" title="Delete">
-                                                            <i class="fas fa-trash"></i> <!-- Icon for deleting -->
-                                                        </a>
-                                                    </td>
+                                                    <td>${trackBooking.id}</td>
+                                                    <td>${trackBooking.roomName}</td>
+                                                    <td>${trackBooking.username}</td>
+                                                    <td>${trackBooking.dateCheckIn}</td>
+                                                    <td>${trackBooking.dateCheckOut}</td>
+                                                    <td>${trackBooking.bookingDate}</td>
+                                                    <td>${trackBooking.quantity}</td>
+                                                    <td>${trackBooking.adultAmount}</td>
+                                                    <td>${trackBooking.childAmount}</td>
+                                                    <td>${trackBooking.totalPrice}</td>
+                                                    <c:if test="${trackBooking.status == 1}">
+                                                        <td>Awaiting approval</td>
+                                                    </c:if>
+                                                    <c:if test="${trackBooking.status == 2}">
+                                                        <td>Accepted</td>
+                                                    </c:if>
+                                                    <c:if test="${trackBooking.status == 3}">
+                                                        <td>Paid</td>
+                                                    </c:if>
                                                 </tr>
                                             </c:forEach>
                                         </tbody>
