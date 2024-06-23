@@ -227,7 +227,7 @@
                                 <div class="row">
                                     <h4 style="color: red">${msg}</h4>
                                     <div>
-                                        <a href="addRoomURL" class="btn btn-success" title="Add Room" style="margin-bottom: 10px;">
+                                        <a href="addRooms" class="btn btn-success" title="Add Room" style="margin-bottom: 10px;">
                                             <i class="fas fa-plus"></i> Add Room
                                         </a>
                                     </div>

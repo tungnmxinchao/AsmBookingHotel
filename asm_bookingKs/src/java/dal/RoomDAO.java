@@ -8,6 +8,7 @@ import static constant.constant.RECORD_PER_PAGE;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import model.Hotel;
 import model.ResponseRoom;
 import model.ResponseRoomDetails;
 import model.ResponseTrackBookingUser;
@@ -25,11 +26,13 @@ public class RoomDAO extends DBContext {
     private List<ResponseRoom> listRoom;
     private List<RoomImage> imageRoom;
     private List<ResponseTrackBookingUser> listTrackBookingUser;
+    private List<Hotel> listHotel;
 
     public RoomDAO() {
         listRoom = new ArrayList<>();
         imageRoom = new ArrayList<>();
         listTrackBookingUser = new ArrayList<>();
+        listHotel = new ArrayList<>();
     }
 
     public int findTotalRecord(int statusInput) {
@@ -417,6 +420,100 @@ public class RoomDAO extends DBContext {
                 return true;
             }
 
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            DBContext.closeResultSetAndStatement(rs, ps);
+        }
+        return false;
+    }
+
+    public List<Hotel> findAllHotel() {
+        String sql = "select * from Hotel";
+        try (Connection connection = new DBContext().connection) {
+            ps = connection.prepareStatement(sql);
+
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt(1);
+                String image = rs.getString(2);
+                String hotelName = rs.getString(3);
+                String address = rs.getString(4);
+                String phoneNum = rs.getString(5);
+                int rating = rs.getInt(6);
+
+                Hotel hotel = new Hotel(id, image, hotelName, address, phoneNum, rating);
+
+                listHotel.add(hotel);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            DBContext.closeResultSetAndStatement(rs, ps);
+        }
+
+        return listHotel;
+    }
+
+    public boolean insertRoom(int idHotel, String name, String description, int price,
+            int status, int adultAmount, int childAmount, int amountRoom, String thumbnailRoom, List<String> imageRooms) {
+        String sql = "INSERT INTO [dbo].[Room]\n"
+                + "           ([hotel_id]\n"
+                + "           ,[name]\n"
+                + "           ,[description]\n"
+                + "           ,[price]\n"
+                + "           ,[status]\n"
+                + "           ,[adultAmount]\n"
+                + "           ,[childAmount]\n"
+                + "           ,[thumbnail]\n"
+                + "           ,[amountRoom])\n"
+                + "     VALUES\n"
+                + "           (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+
+        String sqlInsertRoomImage = "INSERT INTO [dbo].[RoomImage]\n"
+                + "           ([image]\n"
+                + "           ,[room_id])\n"
+                + "     VALUES\n"
+                + "           (?, ?);";
+        
+        String msg = "";
+
+        try (Connection connection = new DBContext().connection) {
+            ps = connection.prepareStatement(sql, ps.RETURN_GENERATED_KEYS);
+            ps.setInt(1, idHotel);
+            ps.setString(2, name);
+            ps.setString(3, description);
+            ps.setInt(4, price);
+            ps.setInt(5, status);
+            ps.setInt(6, adultAmount);
+            ps.setInt(7, childAmount);
+            ps.setString(8, thumbnailRoom);
+            ps.setInt(9, amountRoom);
+
+            int rowAffected = ps.executeUpdate();
+
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    int roomID = generatedKeys.getInt(1);
+                    for (int i = 0; i < imageRooms.size(); i++) {
+                        ps = connection.prepareStatement(sqlInsertRoomImage);
+                        ps.setString(1, imageRooms.get(i));
+                        ps.setInt(2, roomID);
+                        
+                        int rowImagessAfected = ps.executeUpdate();
+                        if (rowImagessAfected > 0){
+                            msg = "add order details successfully";
+                        }else {
+                            msg = "add order details failed";
+                        }
+                    }
+
+                }
+            }       
+            if(rowAffected > 0 ){
+                return true;
+            }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
