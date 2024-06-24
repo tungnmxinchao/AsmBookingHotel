@@ -24,6 +24,46 @@
         <servlet-name>TrackingBookedUserController</servlet-name>
         <servlet-class>controller.TrackingBookedUserController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>RoomWaitingConfirm</servlet-name>
+        <servlet-class>controller.RoomWaitingConfirm</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AccepRequestBookingController</servlet-name>
+        <servlet-class>controller.AccepRequestBookingController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RejectRequestBookingController</servlet-name>
+        <servlet-class>controller.RejectRequestBookingController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ManageRoom</servlet-name>
+        <servlet-class>controller.ManageRoom</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>addRooms</servlet-name>
+        <servlet-class>controller.addRooms</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>adminViewRoom</servlet-name>
+        <servlet-class>controller.adminViewRoom</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>deleteRoom</servlet-name>
+        <servlet-class>controller.deleteRoom</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>roomConfirm</servlet-name>
+        <servlet-class>controller.roomConfirm</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>paidBooking</servlet-name>
+        <servlet-class>controller.paidBooking</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>bookedHistory</servlet-name>
+        <servlet-class>controller.bookedHistory</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>HomeController</servlet-name>
         <url-pattern>/home</url-pattern>
@@ -47,6 +87,46 @@
     <servlet-mapping>
         <servlet-name>TrackingBookedUserController</servlet-name>
         <url-pattern>/trackingBooked</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RoomWaitingConfirm</servlet-name>
+        <url-pattern>/roomWaitingConfirm</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AccepRequestBookingController</servlet-name>
+        <url-pattern>/accepBooking</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RejectRequestBookingController</servlet-name>
+        <url-pattern>/rejectBooking</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ManageRoom</servlet-name>
+        <url-pattern>/manageRoom</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>addRooms</servlet-name>
+        <url-pattern>/addRooms</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>adminViewRoom</servlet-name>
+        <url-pattern>/adminViewRoom</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>deleteRoom</servlet-name>
+        <url-pattern>/deleteRoom</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>roomConfirm</servlet-name>
+        <url-pattern>/roomConfirm</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>paidBooking</servlet-name>
+        <url-pattern>/paidBooking</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>bookedHistory</servlet-name>
+        <url-pattern>/bookedHistory</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -31,6 +32,11 @@ public class HomeController extends HttpServlet {
             switch (action) {
                 case "login":
                     url = LOGIN_CONTROLLER;
+                    break;
+                case "logout":
+                    HttpSession session = request.getSession();
+                    session.removeAttribute("user");
+                    url = HOME_PAGE;
                     break;
                 default:
                     throw new AssertionError();

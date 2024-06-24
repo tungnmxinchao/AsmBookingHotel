@@ -227,7 +227,7 @@
                                 <div class="row">
                                     <h4 style="color: red">${msg}</h4>
                                     <div>
-                                        <a href="addRooms" class="btn btn-success" title="Add Room" style="margin-bottom: 10px;">
+                                        <a href="manageRoom?action=addRooms" class="btn btn-success" title="Add Room" style="margin-bottom: 10px;">
                                             <i class="fas fa-plus"></i> Add Room
                                         </a>
                                     </div>
@@ -262,10 +262,10 @@
                                                     <td>${listRoom.hotelName}</td>
                                                     <td>${listRoom.status == true ? "Active" : "Blocked"}</td>
                                                     <td>
-                                                        <a href="adminViewRoom?id=${listRoom.rid}" class="btn btn-info" title="View Details">
+                                                        <a href="manageRoom?action=adminViewRoom&id=${listRoom.rid}" class="btn btn-info" title="View Details">
                                                             <i class="fas fa-eye"></i> <!-- Icon for viewing details -->
                                                         </a>
-                                                        <a href="deleteRoom?id=${listRoom.rid}" class="btn btn-danger" title="Delete">
+                                                        <a href="manageRoom?action=deleteRoom&id=${listRoom.rid}" class="btn btn-danger" title="Delete">
                                                             <i class="fas fa-trash"></i> <!-- Icon for deleting -->
                                                         </a>
                                                     </td>

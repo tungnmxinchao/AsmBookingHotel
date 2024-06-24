@@ -264,10 +264,10 @@
                                                         <td>Awaiting approval</td>
                                                     </c:if>
                                                     <td>
-                                                        <a href="accepBooking?id=${trackBooking.id}&roomID=${trackBooking.roomId}&quantityBooking=${trackBooking.quantity}" class="accept-link">
+                                                        <a href="roomWaitingConfirm?action=acceptBooking&id=${trackBooking.id}&roomID=${trackBooking.roomId}&quantityBooking=${trackBooking.quantity}" class="accept-link">
                                                             <i class="fas fa-check"></i> Accept
                                                         </a>
-                                                        <a href="rejectBooking?id=${trackBooking.id}" class="reject-link">
+                                                        <a href="roomWaitingConfirm?action=rejectBooking&id=${trackBooking.id}" class="reject-link">
                                                             <i class="fas fa-times"></i> Reject
                                                         </a>
                                                     </td>

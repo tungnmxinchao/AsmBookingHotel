@@ -175,9 +175,8 @@
                                 <label for="hotel">Hotel</label>
                                 <select class="form-control" id="hotel" name="hotel">
                                     <c:forEach items="${listHotel}" var="listHotel">
-                                        <option value="${listHotel.id == idHotel ? 'selected' : ""} >${listHotel.name}</option>
+                                        <option ${listHotel.id == idHotel ? 'selected' : ""} value="${listHotel.id}" >${listHotel.name}</option>
                                     </c:forEach>
-                                    <!-- Add more hotels as needed -->
                                 </select>
                             </div>
 

@@ -266,7 +266,7 @@
                                                         <td>Accepted</td>
                                                     </c:if>
                                                     <td>
-                                                        <a href="paidBooking?id=${trackBooking.id}&roomID=${trackBooking.roomId}&quantityBooking=${trackBooking.quantity}" class="accept-link">
+                                                        <a href="roomConfirm?action=paidBooking&id=${trackBooking.id}&roomID=${trackBooking.roomId}&quantityBooking=${trackBooking.quantity}" class="accept-link">
                                                             <i class="fas fa-check"></i> Accept
                                                         </a>
                                                     </td>

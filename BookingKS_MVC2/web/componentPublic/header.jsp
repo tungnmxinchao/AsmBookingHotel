@@ -34,11 +34,13 @@
                                     <c:if test="${sessionScope.user.role == 0}">
                                         <ul>
                                             <li><a href="trackingBooked">Tracking Room</a></li>
+                                            <li><a href="home?action=logout">Logout</a></li>
                                         </ul>
                                     </c:if>
                                     <c:if test="${sessionScope.user.role == 1}">
                                         <ul>
-                                            <li><a href="manageBooking">Manage Rooms Booked</a></li>
+                                            <li><a href="manageRoom">Manage Rooms</a></li>
+                                            <li><a href="home?action=logout">Logout</a></li>
                                         </ul>
                                     </c:if>
                                 </div>
