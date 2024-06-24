@@ -24,18 +24,26 @@
                             <a href="#"><i class="fa fa-instagram"></i></a>
                         </div>
                         <c:if test="${sessionScope.user == null}">
-                            <a href="home?action=login" class="bk-btn">Login</a>
+                            <a href="login" class="bk-btn">Login</a>
                         </c:if>
-                        <div class="language-option">
-                            <img src="img/flag.jpg" alt="">
-                            <span>EN <i class="fa fa-angle-down"></i></span>
-                            <div class="flag-dropdown">
-                                <ul>
-                                    <li><a href="#">Zi</a></li>
-                                    <li><a href="#">Fr</a></li>
-                                </ul>
+                        <c:if test="${sessionScope.user != null}">
+                            <div class="language-option">
+                                <img src="img/flag.jpg" alt="">
+                                <span>${sessionScope.user.username} <i class="fa fa-angle-down"></i></span>
+                                <div class="flag-dropdown">
+                                    <c:if test="${sessionScope.user.role == 0}">
+                                        <ul>
+                                            <li><a href="trackingBooked">Tracking Room</a></li>
+                                        </ul>
+                                    </c:if>
+                                    <c:if test="${sessionScope.user.role == 1}">
+                                        <ul>
+                                            <li><a href="manageBooking">Manage Rooms Booked</a></li>
+                                        </ul>
+                                    </c:if>
+                                </div>
                             </div>
-                        </div>
+                        </c:if>
                     </div>
                 </div>
             </div>

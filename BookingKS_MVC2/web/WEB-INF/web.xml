@@ -20,6 +20,10 @@
         <servlet-name>BookingRoomController</servlet-name>
         <servlet-class>controller.BookingRoomController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>TrackingBookedUserController</servlet-name>
+        <servlet-class>controller.TrackingBookedUserController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>HomeController</servlet-name>
         <url-pattern>/home</url-pattern>
@@ -39,6 +43,10 @@
     <servlet-mapping>
         <servlet-name>BookingRoomController</servlet-name>
         <url-pattern>/bookingRoom</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TrackingBookedUserController</servlet-name>
+        <url-pattern>/trackingBooked</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
