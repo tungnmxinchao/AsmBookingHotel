@@ -67,7 +67,7 @@ public class BookingRoomController extends HttpServlet {
         }
 
         request.setAttribute("msg", msg);
-        request.getRequestDispatcher("roomDetails.jsp").forward(request, response);
+        request.getRequestDispatcher("room?action=roomDetails&id=" + roomID).forward(request, response);
     }
 
     @Override
