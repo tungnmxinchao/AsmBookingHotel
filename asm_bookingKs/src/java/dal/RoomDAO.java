@@ -626,24 +626,91 @@ public class RoomDAO extends DBContext {
                 + " WHERE [id] = ?";
         try (Connection connection = new DBContext().connection) {
             ps = connection.prepareStatement(sql);
-            
+
             ps.setString(1, imageRoom);
             ps.setInt(2, roomID);
             ps.setInt(3, idRoomImage);
-            
+
             int rowAffected = ps.executeUpdate();
-            
-            if(rowAffected > 0){
+
+            if (rowAffected > 0) {
                 return true;
             }
-            
-            
+
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
             DBContext.closeResultSetAndStatement(rs, ps);
         }
         return false;
+    }
+
+    public int findTotalRecordBySearch(int statusInput, String nameRoom) {
+        String sql = "select count(r.rid) from Room r\n"
+                + "where r.[status] = ? and r.[name] like ?";
+        try (Connection connection = new DBContext().connection) {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, statusInput);
+            ps.setString(2, "%" + nameRoom + "%");
+            
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            DBContext.closeResultSetAndStatement(rs, ps);
+        }
+        return -1;
+    }
+
+    public List<ResponseRoom> findRoomByPageAndSearch(int page, int statusInput, String nameRoom) {
+        String sql = "select r.rid, r.hotel_id, r.[name], r.[description], r.price, r.[status], h.[name], r.adultAmount, \n"
+                + "r.childAmount, r.thumbnail, r.amountRoom from Room r\n"
+                + "join Hotel h\n"
+                + "on r.hotel_id = h.id\n"
+                + "where r.[status] = ? and r.[name] like ?\n"
+                + "order by r.rid\n"
+                + "OFFSET ? ROWS\n"
+                + "FETCH NEXT ? ROWS ONLY";
+        try (Connection connection = new DBContext().connection) {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, statusInput);
+            ps.setString(2, "%" + nameRoom + "%");
+            ps.setInt(3, (page - 1) * RECORD_PER_PAGE);
+            ps.setInt(4, RECORD_PER_PAGE);
+
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt(1);
+                int hotel_id = rs.getInt(2);
+                String name = rs.getString(3);
+                String description = rs.getString(4);
+                int price = rs.getInt(5);
+                boolean status = rs.getBoolean(6);
+                String hotelName = rs.getString(7);
+                int adultAmount = rs.getInt(8);
+                int childAmount = rs.getInt(9);
+                String thumbnail = rs.getString(10);
+                int amountRoom = rs.getInt(11);
+
+                ResponseRoom responseRoom = new ResponseRoom(id, hotel_id, name, description,
+                        GetDataUtils.formatToVietnamCurrency(price), status, hotelName,
+                        adultAmount, childAmount, thumbnail, amountRoom);
+
+                listRoom.add(responseRoom);
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            DBContext.closeResultSetAndStatement(rs, ps);
+        }
+
+        return listRoom;
     }
 
 }

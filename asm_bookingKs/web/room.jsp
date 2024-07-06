@@ -142,15 +142,15 @@
                         </div>
                     </c:forEach>
                     <div class="col-lg-12">
-                        
+
                     </div>
                 </div>
             </div>
         </section>
         <!-- Rooms Section End -->
-        
+
         <%@include file="componentPublic/pagination.jsp" %>
-        
+
         <!-- Footer Section Begin -->
         <footer class="footer-section">
             <div class="container">
@@ -217,17 +217,6 @@
             </div>
         </footer>
         <!-- Footer Section End -->
-
-        <!-- Search model Begin -->
-        <div class="search-model">
-            <div class="h-100 d-flex align-items-center justify-content-center">
-                <div class="search-close-switch"><i class="icon_close"></i></div>
-                <form class="search-model-form">
-                    <input type="text" id="search-input" placeholder="Search here.....">
-                </form>
-            </div>
-        </div>
-        <!-- Search model end -->
 
         <!-- Js Plugins -->
         <script src="js/jquery-3.3.1.min.js"></script>

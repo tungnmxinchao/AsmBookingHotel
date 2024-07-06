@@ -182,6 +182,15 @@
                                     <c:if test="${trackBooking.status == 1}">
                                         <td>Awaiting approval</td>
                                     </c:if>
+                                    <c:if test="${trackBooking.status == 0}">
+                                        <td>Rejected</td>
+                                    </c:if>
+                                    <c:if test="${trackBooking.status == 2}">
+                                        <td>Accepted</td>
+                                    </c:if>
+                                    <c:if test="${trackBooking.status == 3}">
+                                        <td>Paid</td>
+                                    </c:if>
                                 </tr>
                             </c:forEach>
                         </tbody>

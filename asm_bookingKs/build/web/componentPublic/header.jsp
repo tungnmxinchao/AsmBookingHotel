@@ -65,21 +65,15 @@
                             <ul>
                                 <li class="active"><a href="home">Home</a></li>
                                 <li><a href="room">Rooms</a></li>
-                                <li><a href="./about-us.html">About Us</a></li>
-                                <li><a href="./pages.html">Pages</a>
-                                    <ul class="dropdown">
-                                        <li><a href="./room-details.html">Room Details</a></li>
-                                        <li><a href="./blog-details.html">Blog Details</a></li>
-                                        <li><a href="#">Family Room</a></li>
-                                        <li><a href="#">Premium Room</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="./blog.html">News</a></li>
-                                <li><a href="./contact.html">Contact</a></li>
                             </ul>
                         </nav>
                         <div class="nav-right search-switch">
-                            <i class="icon_search"></i>
+
+                            <form id="searchRoom" action="room">
+                                <i class="icon_search"></i>
+                                <input type="text" name="roomName" value="" />
+                                <input type="submit" name="action" value="search" />
+                            </form>
                         </div>
                     </div>
                 </div>

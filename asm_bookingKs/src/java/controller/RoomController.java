@@ -15,7 +15,6 @@ import model.PageControl;
 import static constant.constant.RECORD_PER_PAGE;
 import model.ResponseRoom;
 
-
 /**
  *
  * @author TNO
@@ -63,7 +62,12 @@ public class RoomController extends HttpServlet {
                 ? "defaultFindAll"
                 : request.getParameter("action");
         switch (action) {
-            case "Search":
+            case "search":
+                String nameRoom = request.getParameter("roomName");
+                totalRecord = roomDAO.findTotalRecordBySearch(1, nameRoom);
+                listRoom = roomDAO.findRoomByPageAndSearch(page, 1, nameRoom);
+
+                pageControl.setUrlPattern("room?roomName="+ nameRoom + "&action=search&");
                 break;
             case "category":
                 break;
